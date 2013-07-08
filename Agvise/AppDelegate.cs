@@ -25,11 +25,26 @@ namespace Agvise
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
 			window = new UIWindow (UIScreen.MainScreen.Bounds);
-			
+
+			// get useragent
+			UIWebView agentWebView = new UIWebView ();
+			var userAgent = agentWebView.EvaluateJavascript ("navigator.userAgent");
+			agentWebView = null;
+			userAgent += " AgviseApp";
+
+			// set default useragent
+			NSDictionary dictionary = NSDictionary.FromObjectAndKey(NSObject.FromObject(userAgent), NSObject.FromObject("UserAgent"));
+			NSUserDefaults.StandardUserDefaults.RegisterDefaults(dictionary);
+
 			viewController = new AgviseViewController ();
 			window.RootViewController = viewController;
 			window.MakeKeyAndVisible ();
-			
+
+
+
+			//viewController.MainWebView.LoadRequest(new NSUrlRequest(new NSUrl("http://submit.agvise.com/")));
+			viewController.MainWebView.LoadRequest(new NSUrlRequest(new NSUrl("http://lilmac3e86:49375/")));
+
 			return true;
 		}
 	}

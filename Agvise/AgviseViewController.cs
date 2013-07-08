@@ -7,6 +7,11 @@ namespace Agvise
 {
 	public partial class AgviseViewController : UIViewController
 	{
+		public UIWebView MainWebView {
+			get {
+				return this.WebView;
+			}
+		}
 		static bool UserInterfaceIdiomIsPhone {
 			get { return UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone; }
 		}
