@@ -3,3 +3,4 @@ obj
 *.userprefs
 .DS_Store
 *.pidb
+Components/
