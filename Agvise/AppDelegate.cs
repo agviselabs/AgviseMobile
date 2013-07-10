@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using cdeutsch;
 
 namespace Agvise
 {
@@ -24,6 +25,8 @@ namespace Agvise
 		//
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
+			JsBridge.EnableJsBridge();
+
 			window = new UIWindow (UIScreen.MainScreen.Bounds);
 
 			// get useragent
@@ -40,10 +43,44 @@ namespace Agvise
 			window.RootViewController = viewController;
 			window.MakeKeyAndVisible ();
 
-
-
 			//viewController.MainWebView.LoadRequest(new NSUrlRequest(new NSUrl("http://submit.agvise.com/")));
-			viewController.MainWebView.LoadRequest(new NSUrlRequest(new NSUrl("http://lilmac3e86:49375/")));
+			viewController.MainWebView.LoadRequest(new NSUrlRequest(new NSUrl("http://dev-agvise.apphb.com/")));
+			//viewController.MainWebView.LoadRequest(new NSUrlRequest(new NSUrl("http://lilmac3e86:49375/")));
+
+			// listen for the event triggered by the browser.
+			viewController.MainWebView.AddEventListener( "scanBarcode", delegate(FireEventData arg) {
+
+//				// pass barcode back to browser.
+//				viewController.MainWebView.FireEvent( "scanComplete", new {
+//					code = "9000001"
+//				});
+
+				// show a native action sheet
+				BeginInvokeOnMainThread (delegate { 
+					//NOTE: On Android you MUST pass a Context into the Constructor!
+					var scanningOptions = new ZXing.Mobile.MobileBarcodeScanningOptions();
+					scanningOptions.PossibleFormats = new List<ZXing.BarcodeFormat>() { 
+						ZXing.BarcodeFormat.All_1D
+					};
+					scanningOptions.TryInverted = true;
+					scanningOptions.TryHarder = true;
+					scanningOptions.AutoRotate = false;
+					var scanner = new ZXing.Mobile.MobileBarcodeScanner();
+					scanner.TopText = "Hold camera up to barcode to scan";
+					scanner.BottomText = "Barcode will automatically scan";
+					scanner.Scan(scanningOptions).ContinueWith(t => {   
+						if (t.Result != null) {
+							//Console.WriteLine("Scanned Barcode: " + t.Result.Text);
+
+							// pass barcode back to browser.
+							viewController.MainWebView.FireEvent( "scanComplete", new {
+								code = t.Result.Text
+							});
+						}
+					});
+				});
+
+			});
 
 			return true;
 		}
