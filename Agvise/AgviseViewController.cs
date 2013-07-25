@@ -54,6 +54,12 @@ namespace Agvise
 			};
 		}
 
+//		public override void WillRotate (UIInterfaceOrientation toInterfaceOrientation, double duration)
+//		{
+//			this.WebView.EvaluateJavascript (string.Format ("document.querySelector('meta[name=viewport]').setAttribute('content', 'width={0};', false);", this.WebView.Frame.Size.Width));
+//			base.WillRotate (toInterfaceOrientation, duration);
+//		}
+
 		public override bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation)
 		{
 			// Return true for supported orientations
@@ -64,10 +70,10 @@ namespace Agvise
 			}
 		}
 
-		public override UIStatusBarStyle PreferredStatusBarStyle ()
-		{
-			return UIStatusBarStyle.LightContent;
-		}
+//		public override UIStatusBarStyle PreferredStatusBarStyle ()
+//		{
+//			return UIStatusBarStyle.LightContent;
+//		}
 	}
 }
 
